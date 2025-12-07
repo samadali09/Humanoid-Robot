@@ -1,0 +1,66 @@
+# simulated_environment.yaml
+#
+# This file defines a conceptual simulated environment for the Capstone project.
+# In a real simulation (e.g., in Isaac Sim), this would typically be a USD file
+# or a Gazebo SDF/URDF world description, containing detailed physics, meshes,
+# and object properties.
+#
+# This YAML serves as a high-level representation for LLM planning context
+# and basic environment setup for conceptual examples.
+
+environment:
+  name: "Simple_Office_Room"
+  dimensions:
+    length_m: 10.0
+    width_m: 8.0
+    height_m: 3.0
+  gravity: [0.0, 0.0, -9.81] # m/s^2
+
+objects:
+  - id: "red_box"
+    type: "box"
+    position: [2.0, 1.0, 0.5] # x, y, z in meters
+    dimensions: [0.2, 0.2, 0.2] # length, width, height
+    color: "red"
+    movable: true
+
+  - id: "blue_cylinder"
+    type: "cylinder"
+    position: [-1.5, 3.0, 0.5]
+    dimensions: [0.15, 0.15, 0.5] # radius, height
+    color: "blue"
+    movable: true
+
+  - id: "charging_station"
+    type: "station"
+    position: [4.0, -3.0, 0.0]
+    dimensions: [1.0, 0.5, 0.1]
+    color: "gray"
+    movable: false
+
+  - id: "table"
+    type: "table"
+    position: [0.0, 0.0, 0.75]
+    dimensions: [1.5, 0.8, 0.75]
+    color: "brown"
+    movable: false
+    contains: ["red_cup", "blue_cube"]
+
+robot:
+  id: "humanoid_robot"
+  type: "bipedal"
+  initial_position: [0.0, -4.0, 0.0]
+  capabilities:
+    - "navigate"
+    - "detect_objects"
+    - "manipulate_objects"
+    - "push_objects"
+  sensors:
+    - "camera"
+    - "lidar"
+    - "imu"
+
+goals:
+  - "go_to_charging_station"
+  - "find_and_push_red_box"
+  - "pick_up_blue_cylinder_from_table"
