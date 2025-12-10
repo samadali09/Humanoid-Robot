@@ -11,32 +11,35 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Advanced AI Core',
+    // Note: Aapko apni robot brain ki image yahan lagani hogi
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Powered by state-of-the-art neural networks. The robot can process visual 
+        data, recognize faces, and adapt to dynamic environments in real-time.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Fluid Humanoid Motion',
+    // Note: Aapko robot walking/structure ki image yahan lagani hogi
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Engineered with 34 degrees of freedom. Our actuators allow for seamless, 
+        natural walking, running, and precise hand gestures similar to humans.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Human-Robot Interaction',
+    // Note: Aapko interaction/speech ki image yahan lagani hogi
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Designed for safe collaboration. With Natural Language Processing (NLP), 
+        the robot understands voice commands and responds with emotional intelligence.
       </>
     ),
   },
