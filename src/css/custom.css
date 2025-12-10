@@ -1,10 +1,4 @@
-/* ======================================================
-   THEME: DUAL REALITY (Clean Lab Light / Neo-Matrix Dark)
-   ====================================================== */
-
-/* --- 1. LIGHT MODE DEFAULTS (The "Clean Lab" Look) --- */
 :root {
-  /* PRIMARY: Deep Digital Green (Readable on White) */
   --ifm-color-primary: #008F11; 
   --ifm-color-primary-dark: #00800f;
   --ifm-color-primary-darker: #00790e;
@@ -13,30 +7,24 @@
   --ifm-color-primary-lighter: #00cf19;
   --ifm-color-primary-lightest: #26ff45;
 
-  /* ACCENT: Hot Pink (Kept for consistency) */
   --ifm-color-danger: #FF007F;
   --ifm-color-danger-dark: #d9006c;
 
-  /* BACKGROUND: Clean White/Silver */
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #f2f2f2;
-  --ifm-font-color-base: #1c1e21; /* Dark Gray for readability */
+  --ifm-font-color-base: #1c1e21; 
   --ifm-heading-color: #000000;
   
-  /* BORDERS */
   --ifm-toc-border-color: #e5e5e5;
   --ifm-hr-border-color: #e5e5e5;
 
-  /* Layout Settings */
   --ifm-container-width: 100%;
   --ifm-container-width-xl: 1440px;
   --ifm-code-font-size: 95%;
   --ifm-font-family-base: 'Courier New', Courier, monospace, system-ui, sans-serif;
 }
 
-/* --- 2. DARK MODE OVERRIDES (The "Neo-Matrix" Look) --- */
 [data-theme='dark'] {
-  /* PRIMARY: Neon Lime #39FF14 (Restored for Dark Mode) */
   --ifm-color-primary: #39FF14;
   --ifm-color-primary-dark: #2edb0f;
   --ifm-color-primary-darker: #29c20d;
@@ -45,36 +33,28 @@
   --ifm-color-primary-lighter: #70ff57;
   --ifm-color-primary-lightest: #a6ff99;
 
-  /* BACKGROUND: Pure Black */
   --ifm-background-color: #000000;
   
-  /* SURFACE: Very dark Matrix Green blend */
   --ifm-background-surface-color: #001a00; 
   
-  /* TEXT: Silver */
   --ifm-font-color-base: #C0C0C0;
   --ifm-heading-color: #E0E0E0;
   
-  /* BORDERS: Matrix Green */
   --ifm-toc-border-color: #003B00;
   --ifm-hr-border-color: #003B00;
   --ifm-navbar-background-color: #000000;
   
-  /* Code Blocks */
   --docusaurus-highlighted-code-line-bg: rgba(57, 255, 20, 0.1);
 }
 
-/* --- 3. HERO SECTION (Adaptive Gradient) --- */
 .hero {
   padding: 5rem 0;
   position: relative;
-  /* LIGHT MODE: Clean Silver Gradient */
   background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
   color: #1c1e21;
   border-bottom: 2px solid var(--ifm-color-primary);
 }
 
-/* DARK MODE HERO: Matrix Gradient */
 [data-theme='dark'] .hero {
   background: linear-gradient(180deg, #000000 0%, #003B00 100%);
   color: #C0C0C0;
@@ -85,21 +65,17 @@
   font-size: 3.5rem;
   font-weight: 700;
   letter-spacing: -1px;
-  /* Use variable so it is Dark Green in Light Mode, Neon Lime in Dark Mode */
   color: var(--ifm-color-primary); 
 }
 
-/* Glow only in Dark Mode */
 [data-theme='dark'] .hero__title {
   text-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
 }
 
 .hero__subtitle {
   font-weight: 400;
-  /* Adapts automatically based on font-color-base */
 }
 
-/* --- 4. DOCUMENTATION BANNER --- */
 .theme-doc-markdown::before {
   content: "";
   display: block;
@@ -114,19 +90,15 @@
   border-radius: 0px; 
   margin-bottom: 2rem;
   
-  /* Border uses variable to adapt to Light/Dark green automatically */
   border: 1px solid var(--ifm-color-primary);
 }
 
-/* Dark Mode Shadow Effect for Banner */
 [data-theme='dark'] .theme-doc-markdown::before {
   box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
 }
 
-/* --- 5. BUTTONS (Adaptive) --- */
 .button--primary {
   background: transparent;
-  /* Use variable so it changes color automatically */
   border: 2px solid var(--ifm-color-primary); 
   color: var(--ifm-color-primary);
   
@@ -140,25 +112,21 @@
 
 .button--primary:hover {
   background: var(--ifm-color-primary);
-  /* Text color on hover: White in Light Mode, Black in Dark Mode */
   color: #ffffff; 
   text-decoration: none;
 }
 
 [data-theme='dark'] .button--primary:hover {
-  color: #000000; /* Black text on Neon Lime background */
+  color: #000000; 
   box-shadow: 0 0 30px #39FF14;
 }
 
-/* Danger Buttons */
 .button--danger, .admonition-danger {
   border-color: var(--ifm-color-danger) !important;
   color: var(--ifm-color-danger);
 }
 
-/* --- 6. NAVBAR --- */
 .navbar {
-  /* Light Mode Border */
   border-bottom: 1px solid #e5e5e5;
 }
 
@@ -173,7 +141,6 @@
   font-family: monospace;
 }
 
-/* --- 7. SIDEBAR & MENU --- */
 .theme-doc-sidebar-container {
   border-right: 1px solid #e5e5e5;
 }
@@ -182,9 +149,7 @@
   background-color: #000000;
 }
 
-/* Active Menu Item */
 .menu__link--active {
-  /* Light Mode Active */
   background: rgba(0, 143, 17, 0.1);
   color: var(--ifm-color-primary);
   border-left: 3px solid var(--ifm-color-primary);
@@ -192,7 +157,6 @@
 }
 
 [data-theme='dark'] .menu__link--active {
-  /* Dark Mode Active (Matrix Gradient) */
   background: linear-gradient(90deg, #003B00 0%, transparent 100%);
   color: #39FF14;
 }
@@ -204,15 +168,12 @@
   color: #39FF14;
 }
 
-/* --- 8. CARDS & ICONS --- */
 .featureSvg {
   height: 180px;
   width: 180px;
-  /* Use variable for shadow color so it adapts */
   filter: drop-shadow(0 0 5px var(--ifm-color-primary));
 }
 
-/* --- 9. LAYOUT FIXES --- */
 .container {
   max-width: 95% !important;
   padding: 0 40px;
@@ -225,7 +186,6 @@
   max-width: 100% !important;
 }
 
-/* --- 10. SCROLLBARS --- */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -233,7 +193,7 @@
   background: var(--ifm-background-color); 
 }
 ::-webkit-scrollbar-thumb {
-  background: #cccccc; /* Gray thumb light mode */
+  background: #cccccc; 
   border: 1px solid var(--ifm-color-primary);
 }
 
@@ -248,7 +208,6 @@
   background: #39FF14; 
 }
 
-/* --- 11. ADMONITIONS --- */
 .alert--danger {
   --ifm-alert-background-color: rgba(255, 0, 127, 0.1);
   --ifm-alert-border-color: #FF007F;
@@ -256,7 +215,6 @@
 }
 
 .alert--info {
-  /* Adapts to Deep Green (Light) or Neon Lime (Dark) */
   --ifm-alert-background-color: rgba(57, 255, 20, 0.1);
   --ifm-alert-border-color: var(--ifm-color-primary);
   color: var(--ifm-color-primary);
