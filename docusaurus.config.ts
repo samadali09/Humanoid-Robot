@@ -7,7 +7,7 @@ const config: Config = {
   tagline: 'Complete Detail related to Humanoid Robotics',
   favicon: 'img/favicon.ico',
 
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://humanoid-robot-nine.vercel.app',
   baseUrl: '/',
 
   organizationName: 'VLA-Capstone', 
