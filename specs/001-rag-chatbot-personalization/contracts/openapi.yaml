@@ -1,0 +1,668 @@
+openapi: 3.0.3
+info:
+  title: RAG Chatbot and Personalization Engine API
+  description: |
+    FastAPI backend for RAG-powered Q&A, content personalization, and translation
+    for a Docusaurus-based technical book.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+tags:
+  - name: auth
+    description: Authentication and user management
+  - name: chat
+    description: RAG-powered Q&A
+  - name: personalization
+    description: Content personalization
+  - name: translation
+    description: Content translation
+  - name: admin
+    description: Admin operations (ingestion, health)
+
+paths:
+  /auth/signup:
+    post:
+      tags: [auth]
+      summary: Register a new user
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Login with email and password
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Logout and invalidate session
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged out successfully"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/profile:
+    get:
+      tags: [auth]
+      summary: Get current user profile
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags: [auth]
+      summary: Update user profile
+      operationId: updateProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /chat:
+    post:
+      tags: [chat]
+      summary: RAG-powered Q&A (non-streaming)
+      operationId: chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Chat response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chat/stream:
+    post:
+      tags: [chat]
+      summary: RAG-powered Q&A (streaming)
+      operationId: chatStream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Server-Sent Events stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: SSE stream with chat tokens
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /personalize:
+    post:
+      tags: [personalization]
+      summary: Personalize chapter content based on user profile
+      operationId: personalize
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalizeRequest'
+      responses:
+        '200':
+          description: Personalized content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalizeResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /translate:
+    post:
+      tags: [translation]
+      summary: Translate chapter content to target language
+      operationId: translate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslateRequest'
+      responses:
+        '200':
+          description: Translated content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslateResponse'
+        '400':
+          description: Invalid request or unsupported language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ingest:
+    post:
+      tags: [admin]
+      summary: Trigger book content ingestion into vector database
+      operationId: ingest
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force_reindex:
+                  type: boolean
+                  default: false
+                  description: Force re-indexing even if content hash hasn't changed
+      responses:
+        '200':
+          description: Ingestion completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  chunks_processed:
+                    type: integer
+                    example: 523
+                  chunks_added:
+                    type: integer
+                    example: 45
+                  chunks_updated:
+                    type: integer
+                    example: 12
+                  duration_seconds:
+                    type: number
+                    example: 28.5
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Ingestion failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      tags: [admin]
+      summary: Health check endpoint
+      operationId: health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object:
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  services:
+                    type: object
+                    properties:
+                      database:
+                        type: string
+                        example: "connected"
+                      qdrant:
+                        type: string
+                        example: "connected"
+                      openai:
+                        type: string
+                        example: "accessible"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authenticated users
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Admin API key for privileged operations
+
+  schemas:
+    SignupRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+        - backgroundLevel
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: "SecurePass123"
+        name:
+          type: string
+          example: "John Doe"
+        backgroundLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+          example: "intermediate"
+        expertiseAreas:
+          type: array
+          items:
+            type: string
+          example: ["AI/ML", "Robotics"]
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "SecurePass123"
+        rememberMe:
+          type: boolean
+          default: false
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT authentication token
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user:
+          $ref: '#/components/schemas/UserProfile'
+        expiresAt:
+          type: string
+          format: date-time
+          example: "2026-01-10T12:00:00Z"
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        name:
+          type: string
+          example: "John Doe"
+        backgroundLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+          example: "intermediate"
+        expertiseAreas:
+          type: array
+          items:
+            type: string
+          example: ["AI/ML", "Robotics"]
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-01-01T10:00:00Z"
+        lastLogin:
+          type: string
+          format: date-time
+          example: "2026-01-03T14:30:00Z"
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        backgroundLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        expertiseAreas:
+          type: array
+          items:
+            type: string
+
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: User's question or message
+          example: "What is a ROS 2 node?"
+        sessionId:
+          type: string
+          description: Optional session ID for conversation continuity
+          example: "session-abc123"
+        conversationHistory:
+          type: array
+          description: Previous messages in conversation (for context)
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+        selectedText:
+          type: string
+          description: Text selected by user for "Explain This" feature
+          example: "A node is a process that performs computation."
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant, system]
+          example: "user"
+        content:
+          type: string
+          example: "What is a ROS 2 node?"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-01-03T14:30:00Z"
+
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: AI-generated response
+          example: "A ROS 2 node is a process that performs computation..."
+        citations:
+          type: array
+          description: Sources used to generate response
+          items:
+            $ref: '#/components/schemas/Citation'
+        sessionId:
+          type: string
+          example: "session-abc123"
+        usage:
+          $ref: '#/components/schemas/Usage'
+
+    Citation:
+      type: object
+      properties:
+        chunkId:
+          type: string
+          example: "chapter-2_chunk-5"
+        text:
+          type: string
+          description: Excerpt from source
+          example: "A node is a process that performs computation..."
+        citation:
+          type: string
+          description: Formatted citation
+          example: "Chapter 2: ROS 2 Basics, Section 2.3.1"
+        score:
+          type: number
+          description: Relevance score (0-1)
+          example: 0.85
+
+    PersonalizeRequest:
+      type: object
+      required:
+        - chapterId
+      properties:
+        chapterId:
+          type: string
+          description: Chapter identifier (e.g., filename or slug)
+          example: "chapter-2-ros2-basics"
+
+    PersonalizeResponse:
+      type: object
+      properties:
+        chapterId:
+          type: string
+          example: "chapter-2-ros2-basics"
+        personalizedContent:
+          type: string
+          description: Markdown content adapted to user's level
+        backgroundLevel:
+          type: string
+          example: "intermediate"
+        cachedAt:
+          type: string
+          format: date-time
+          example: "2026-01-03T14:30:00Z"
+
+    TranslateRequest:
+      type: object
+      required:
+        - chapterId
+        - targetLanguage
+      properties:
+        chapterId:
+          type: string
+          example: "chapter-2-ros2-basics"
+        targetLanguage:
+          type: string
+          enum: [ur]
+          example: "ur"
+          description: Target language code (currently only Urdu supported)
+
+    TranslateResponse:
+      type: object
+      properties:
+        chapterId:
+          type: string
+          example: "chapter-2-ros2-basics"
+        translatedContent:
+          type: string
+          description: Markdown content translated to target language
+        sourceLanguage:
+          type: string
+          example: "en"
+        targetLanguage:
+          type: string
+          example: "ur"
+        cachedAt:
+          type: string
+          format: date-time
+          example: "2026-01-03T14:30:00Z"
+
+    Usage:
+      type: object
+      properties:
+        promptTokens:
+          type: integer
+          example: 150
+        completionTokens:
+          type: integer
+          example: 75
+        totalTokens:
+          type: integer
+          example: 225
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid credentials"
+        detail:
+          type: string
+          example: "Email or password is incorrect"
+        code:
+          type: string
+          example: "AUTH_INVALID_CREDENTIALS"
+
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Validation error"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "email"
+              message:
+                type: string
+                example: "Invalid email format"
